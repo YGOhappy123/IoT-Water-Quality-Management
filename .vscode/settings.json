@@ -1,0 +1,11 @@
+{
+    "[python]": {
+        "diffEditor.ignoreTrimWhitespace": false,
+        "gitlens.codeLens.symbolScopes": ["!Module"],
+        "editor.formatOnType": true,
+        "editor.formatOnSave": true,
+        "editor.wordBasedSuggestions": "off",
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "black-formatter.args": ["--skip-string-normalization", "--skip-magic-trailing-comma", "--line-length", "120"]
+}
