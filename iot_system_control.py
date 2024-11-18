@@ -2,7 +2,8 @@ from threading import Timer
 from firebase_admin import credentials, db, initialize_app
 import time
 
-FIREBASE_URL = 'https://water-quality-management-ptit-default-rtdb.asia-southeast1.firebasedatabase.app/'
+FIREBASE_DB_URL = 'https://water-quality-management-ptit-default-rtdb.asia-southeast1.firebasedatabase.app/'
+TIME_BETWEEN_PROCESSES = 2
 
 
 def set_interval(func, interval, *args, **kwargs):
@@ -24,21 +25,32 @@ def keep_main_thread_alive():
 
 def control_iot_system():
     try:
-        is_processed = db.reference('IsProcessed').get()
+        db_is_processed_ref = db.reference('IsProcessed')
+        db_sensors_ref = db.reference('Sensors')
 
-        if not is_processed:
-            sensor_data = db.reference('Sensors').get()
+        is_data_processed = db_is_processed_ref.get()
+
+        if not is_data_processed:
+            sensor_data = db_sensors_ref.get()
+            print(sensor_data)
+
+            db_is_processed_ref.set(True)
 
     except Exception:
-
+        print('Cannot fetch data from Firebase.')
         return
 
 
 def connect_to_firebase():
-    cred = credentials.Certificate('firebase_credentials.json')
-    initialize_app(cred, {'databaseURL': FIREBASE_URL})
+    try:
+        cred = credentials.Certificate('firebase_credentials.json')
+        initialize_app(cred, {'databaseURL': FIREBASE_DB_URL})
+        print('Connected to Firebase.')
+    except Exception:
+        print('Connect to Firebase failed.')
 
 
-connect_to_firebase()
-set_interval(control_iot_system, 1)
-keep_main_thread_alive()
+if __name__ == '__main__':
+    connect_to_firebase()
+    set_interval(control_iot_system, TIME_BETWEEN_PROCESSES)
+    keep_main_thread_alive()
