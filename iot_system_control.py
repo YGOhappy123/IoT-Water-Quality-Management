@@ -25,16 +25,19 @@ def keep_main_thread_alive():
 
 def control_iot_system():
     try:
-        db_is_processed_ref = db.reference('IsProcessed')
-        db_sensors_ref = db.reference('Sensors')
+        fb_is_automatic_ref = db.reference('IsAutomatic')
+        fb_is_processed_ref = db.reference('IsProcessed')
+        fb_sensors_ref = db.reference('Sensors')
 
-        is_data_processed = db_is_processed_ref.get()
+        if not fb_is_automatic_ref.get():
+            print('Automatic control mode is turned off.')
+            return
 
-        if not is_data_processed:
-            sensor_data = db_sensors_ref.get()
+        if not fb_is_processed_ref.get():
+            sensor_data = fb_sensors_ref.get()
             print(sensor_data)
 
-            db_is_processed_ref.set(True)
+            fb_is_processed_ref.set(True)
 
     except Exception:
         print('Cannot fetch data from Firebase.')
