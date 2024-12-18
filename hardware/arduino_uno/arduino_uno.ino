@@ -19,7 +19,7 @@ DallasTemperature temperatureSensor(&oneWire);
 LiquidCrystal_I2C lcdDisplay(0x27, 20, 4);
 
 String jsonInput;
-float waterTankHeight = 0;
+float waterTankHeight = 35.0;
 float waterLevel = 0;
 float temperature = 0;
 float tdsLevel = 0;
@@ -47,10 +47,14 @@ void setup () {
 }
 
 void loop() {
-    waterLevel = waterTankHeight - getDistanceToWaterSurface();
-    temperature = getWaterTemperature();
-    tdsLevel = getWaterTdsValue();
-    humidity = getEnvironmentHumidity();
+    // waterLevel = waterTankHeight - getDistanceToWaterSurface();
+    // temperature = getWaterTemperature();
+    // tdsLevel = getWaterTdsValue();
+    // humidity = getEnvironmentHumidity();
+    waterLevel = 26.687;
+    temperature = 31.6875;
+    tdsLevel = 72;
+    humidity = 56.54631;
     printJsonObjectToSerial (waterLevel, temperature, tdsLevel, humidity);
 
     while (Serial.available()) {
@@ -114,10 +118,10 @@ void printJsonObjectToSerial (float waterLevel, float temperature, float tdsLeve
     StaticJsonDocument<200> doc;
     String jsonOutput;
 
-    doc["waterLevel"] = waterLevel;
-    doc["temperature"] = temperature;
-    doc["humidity"] = humidity;
-    doc["tdsLevel"] = tdsLevel;
+    doc["waterLevel"] = roundf(waterLevel * 100) / 100.0;
+    doc["temperature"] = roundf(temperature * 100) / 100.0;
+    doc["tdsLevel"] = roundf(tdsLevel * 100) / 100.0;
+    doc["humidity"] = roundf(humidity * 100) / 100.0;
 
     serializeJson(doc, jsonOutput);
     Serial.println(jsonOutput);
