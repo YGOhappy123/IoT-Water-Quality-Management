@@ -26,7 +26,7 @@ DallasTemperature temperatureSensor(&oneWire);
 LiquidCrystal_I2C lcdDisplay(0x27, 20, 4);
 
 String jsonInput;
-float waterTankHeight = 35.0;
+float waterTankHeight = 30.0;
 float waterLevel = 0;
 float temperature = 0;
 float tdsLevel = 0;
