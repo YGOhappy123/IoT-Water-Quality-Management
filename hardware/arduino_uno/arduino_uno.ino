@@ -173,7 +173,7 @@ void displayTdsMessage (float tdsLevel) {
         if (tdsLevel <= 100) {
             displayMessageToLCD(3, "Can Them Dinh Duong");
         } else {
-            displayMessageToLCD(4, "Vui Long Thay Nuoc");
+            displayMessageToLCD(3, "Vui Long Thay Nuoc");
         }
     }
 }
